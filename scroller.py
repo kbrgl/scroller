@@ -5,7 +5,7 @@ import config
 import sys
 import select
 
-parser = argparse.ArgumentParser(config.description)
+parser = argparse.ArgumentParser(description=config.description)
 parser.add_argument('-i', '--interval', dest='interval', default=0.2, type=float, help='specify scroll speed in seconds')
 parser.add_argument('-n', '--newline', action='store_true', default=False, dest='newline', help='print each permutation on a separate line')
 parser.add_argument('-s', '--separator', dest='sep', default=' ', help='append a separator to input string before animating, used as padding')
@@ -36,7 +36,11 @@ def main(string=None, args=None):
         args = parser.parse_args()
 
     if string is None:
-        string = input()
+        try:
+            string = input()
+        except KeyboardInterrupt:
+            print(end='\r')
+            return
 
     static = False
     if args.len >= len(string):
@@ -61,6 +65,7 @@ def main(string=None, args=None):
 
     except KeyboardInterrupt:
         print(end='\r')
+
 
 if __name__ == '__main__':
     main()
