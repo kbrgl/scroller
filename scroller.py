@@ -23,15 +23,14 @@ def scroll(string, rev=False, sep='', static=False):
             string = permute(string, rev=rev)
         yield string
 
-def loop(string, end='\r', interval=0.2,
+def scroller(string,
          static=False, count=float('inf'),
          reverse=False, sep=''):
     i = 0
     for permutation in scroll(string, rev=reverse, sep=sep, static=static):
         if i >= count:
             break
-        print(permutation, end=end)
-        time.sleep(interval)
+        yield permutation
         i += 1
 
 def main(string=None, args=None):
@@ -54,10 +53,12 @@ def main(string=None, args=None):
         interval = 0.2
 
     count = float('inf')
-    if args.count:
+    if args.count and args.count >= 0:
         count = args.count
 
-    loop(string, end, interval, static, count, args.reverse, args.sep)
+    for permutation in scroller(string, static, count, args.reverse, args.sep):
+        print(permutation, end=end)
+        time.sleep(interval)
 
 
 if __name__ == '__main__':
