@@ -26,12 +26,10 @@ def scroll(string, rev=False, sep='', static=False):
 def scroller(string,
          static=False, count=float('inf'),
          reverse=False, sep=''):
-    i = 0
-    for permutation in scroll(string, rev=reverse, sep=sep, static=static):
+    for i, permutation in enumerate(scroll(string, rev=reverse, sep=sep, static=static)):
         if i >= count:
             break
         yield permutation
-        i += 1
 
 def main(string=None, args=None):
     if args is None:
@@ -56,10 +54,13 @@ def main(string=None, args=None):
     if args.count and args.count >= 0:
         count = args.count
 
-    for permutation in scroller(string, static, count, args.reverse, args.sep):
-        print(permutation, end=end)
-        time.sleep(interval)
+    try:
+        for permutation in scroller(string, static, count, args.reverse, args.sep):
+            print(permutation, end=end)
+            time.sleep(interval)
 
+    except KeyboardInterrupt:
+        print(end='\r')
 
 if __name__ == '__main__':
     main()
