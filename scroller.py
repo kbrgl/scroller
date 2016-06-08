@@ -2,6 +2,8 @@
 import time
 import argparse
 import config
+import sys
+import select
 
 parser = argparse.ArgumentParser(config.description)
 parser.add_argument('-i', '--interval', dest='interval', default=0.2, type=float, help='specify scroll speed in seconds')
@@ -21,27 +23,42 @@ def scroll(string, rev=False, sep='', static=False):
             string = permute(string, rev=rev)
         yield string
 
-def main(string=None, args=None):
-    if args is None:
-        args = parser.parse_args()
-    if string is None:
-        string = input()
-    static = False
-    if args.len >= len(string):
-        static = True
-    end = '\n' if args.newline else '\r'
-    interval = 0 if args.interval < 0 else args.interval
-    count = args.count if args.count else float('inf')
+def loop(string, end='\r', interval=0.2,
+         static=False, count=float('inf'),
+         reverse=False, sep=''):
     i = 0
-    for permutation in scroll(string, rev=args.reverse, sep=args.sep, static=static):
+    for permutation in scroll(string, rev=reverse, sep=sep, static=static):
         if i >= count:
             break
         print(permutation, end=end)
         time.sleep(interval)
         i += 1
 
+def main(string=None, args=None):
+    if args is None:
+        args = parser.parse_args()
+
+    if string is None:
+        string = input()
+
+    static = False
+    if args.len >= len(string):
+        static = True
+
+    end = '\r'
+    if args.newline:
+        end = '\n'
+
+    interval = args.interval
+    if args.interval < 0:
+        interval = 0.2
+
+    count = float('inf')
+    if args.count:
+        count = args.count
+
+    loop(string, end, interval, static, count, args.reverse, args.sep)
+
+
 if __name__ == '__main__':
-    try:
-        main()
-    except KeyboardInterrupt:
-        print()
+    main()
