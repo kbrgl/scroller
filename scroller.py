@@ -3,6 +3,9 @@ import argparse
 import config
 import sys
 import select
+import signal
+
+signal.signal(signal.SIGPIPE, signal.SIG_DFL)
 
 
 class InputReceived(Exception):
@@ -71,7 +74,8 @@ parser.add_argument(
                     dest='persist',
                     default=False,
                     action='store_true',
-                    help='if using --open flag, do not exit after stdin is closed'
+                    help='if using --open flag, \
+                            do not exit after stdin is closed'
                    )
 
 parser.add_argument(
@@ -81,6 +85,7 @@ parser.add_argument(
                     action='store_true',
                     help='print version and exit'
                    )
+
 
 def permute(string, rev=False):
     return (string[-1] + string[:-1] if rev else string[1:] + string[0])
@@ -148,6 +153,7 @@ def main(string=None, args=None):
                                         args.reverse,
                                         args.sep):
                 print(permutation, end=end)
+                sys.stdout.flush()
                 time.sleep(interval)
         else:
             try:
@@ -160,6 +166,7 @@ def main(string=None, args=None):
                     if sys.stdin in r:
                         raise InputReceived
                     print(permutation, end=end)
+                    sys.stdout.flush()
                     time.sleep(interval)
             except InputReceived:
                 try:

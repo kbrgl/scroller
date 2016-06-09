@@ -1,14 +1,14 @@
 # Description
 Scroller is a simple yet incredibly robust and powerful scrolling animator written in Python.
 
-Its primary use case lies with window managers, GUIs and TUIs where screen real estate is limited and it is useful to truncate or animate the text to fully utilise available space. It is meant to be used as part of a chain of Unix pipes. 
+Its primary use case lies with window managers, GUIs and TUIs where screen real estate is limited and it is useful to truncate or animate the text to fully utilise available space. It is meant to be used as part of a chain of Unix pipes.
 
 Scroller has been built with sane defaults and it is incredibly easy to get started. An example:
 
 ```sh
 # xtitle is a command line utility that gets the title of the currently focused window from your desktop environment or window manager. The -s flag causes it to stream the window titles - whenever the active window changes, it outputs the new title
 # lemonbar is a simple program for rendering a status bar / panel on your display - it is commonly used with window managers like i3 and bspwm
-xtitle -s | scroller -o -l 80 | lemonbar -g x500
+xtitle -s | scroller -o -n | lemonbar
 ```
 
 Using it is literally that simple. The window manager use case is just an example - Scroller can be used anywhere.
@@ -27,10 +27,9 @@ Run `which pip` to check whether you have pip installed - if the command returns
 If you do not have pip installed, you can Google "install python 3 pip <your linux distribution / operating system here>" for instructions on how to install it.
 
 # Usage
-
 ```sh
 usage: scroller [-h] [-i INTERVAL] [-n] [-s SEP] [-l LEN] [-c COUNT] [-r] [-o]
-                [-v]
+                [-p] [-v]
 
 A robust yet simple utility for animating scrolling text in the terminal.
 
@@ -48,6 +47,8 @@ optional arguments:
                         specify number of characters to scroll
   -r, --reverse         scroll text in the opposite direction
   -o, --open            keep stdin open and reload on any new input
+  -p, --persist         if using --open flag, do not exit after stdin is
+                        closed
   -v, --version         print version and exit
 ```
 
@@ -100,14 +101,12 @@ $ echo 'John' | scroller -n -c 3 -s ' -- '
 ohn -- J
 hn -- Jo
 n -- Joh
- -- John
 ```
 By default, the separator is a single space. If the default separator was an empty string (''), the output would look like the following:
 ```
 ohnJ
 hnJo
 nJoh
-John
 ```
 
 # License
