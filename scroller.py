@@ -152,6 +152,8 @@ def main(string=None, args=None):
                                         count,
                                         args.reverse,
                                         args.sep):
+                if args.len:
+                    permutation = permutation[:args.len + 1]
                 print(permutation, end=end)
                 sys.stdout.flush()
                 time.sleep(interval)
@@ -165,6 +167,8 @@ def main(string=None, args=None):
                     r, _, _ = select.select([sys.stdin], [], [], 0)
                     if sys.stdin in r:
                         raise InputReceived
+                    if args.len:
+                        permutation = permutation[:args.len - 1]
                     print(permutation, end=end)
                     sys.stdout.flush()
                     time.sleep(interval)
@@ -177,7 +181,8 @@ def main(string=None, args=None):
                         main(string, args)
                     else:
                         return
-                sys.stdout.write('\033[K')
+                if not args.newline:
+                    sys.stdout.write('\033[K')
                 main(string, args)
 
     except KeyboardInterrupt:
