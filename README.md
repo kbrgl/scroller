@@ -6,9 +6,9 @@ Its primary use case lies with window managers, GUIs and TUIs where screen real 
 Scroller has been built with sane defaults and it is incredibly easy to get started. An example:
 
 ```sh
-# xtitle is a command line utility that gets the title of the currently focused window from your desktop environment or window manager.
+# xtitle is a command line utility that gets the title of the currently focused window from your desktop environment or window manager. The -s flag causes it to stream the window titles - whenever the active window changes, it outputs the new title
 # lemonbar is a simple program for rendering a status bar / panel on your display - it is commonly used with window managers like i3 and bspwm
-xtitle | scroller | lemonbar -g x500
+xtitle -s | scroller -o -l 80 | lemonbar -g x500
 ```
 
 Using it is literally that simple. The window manager use case is just an example - Scroller can be used anywhere.
@@ -29,8 +29,10 @@ If you do not have pip installed, you can Google "install python 3 pip <your lin
 # Usage
 
 ```sh
-usage: A robust yet simple utility for animating scrolling text in the terminal.
-       [-h] [-i INTERVAL] [-n] [-s SEP] [-l LEN] [-c COUNT] [-r]
+usage: scroller [-h] [-i INTERVAL] [-n] [-s SEP] [-l LEN] [-c COUNT] [-r] [-o]
+                [-v]
+
+A robust yet simple utility for animating scrolling text in the terminal.
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -45,6 +47,8 @@ optional arguments:
   -c COUNT, --count COUNT
                         specify number of characters to scroll
   -r, --reverse         scroll text in the opposite direction
+  -o, --open            keep stdin open and reload on any new input
+  -v, --version         print version and exit
 ```
 
 # Examples
@@ -61,6 +65,26 @@ y Gumb
  Gumby
 ```
 
+
+The `-o` option means "Listen for incoming input. Whenever new input is received, update the current string with the new input." This option is useful if you are using Scroller to scroll text that is likely to change, such as the title of the active window, information about the currently playing song, etc.
+```
+$ xtitle -s | scroller -o -n
+~/Code/scroller | nvim 
+/Code/scroller | nvim $
+Code/scroller | nvim $/
+ode/scroller | nvim $/C
+# now, I switch to another window. this causes xtitle to output a new line of text. scroller picks up this new line of text.
+~ | fish 
+ | fish ~
+| fish ~ 
+```
+One thing to note is that if the input stream is closed, Scroller will also exit. This behaviour can be overriden with the `-p` flag.
+```
+$ echo -e 'are you\nthe brain specialist?' | scroller -o -n
+```
+When `-c` or `--count` is used with `-o`, then count specifies the maximum number of times __each string__ can be scrolled. If any of the strings is scrolled for longer than that, then Scroller exits.
+
+
 The `-l 5` option means "if the text is less than 5 characters long then do not scroll it". This option is immensely useful if you want to make sure the text does not exceed a certain length -- sure, you could truncate it, but truncation may leave out important details.
 ```sh
 $ echo 'John' | scroller -n -c 3 -l 5
@@ -68,6 +92,7 @@ John
 John
 John
 ```
+
 
 The `-s ' -- '` option means "after the entire string has been displayed, separate the end of the string and the start of string with ' -- '.
 ```sh
