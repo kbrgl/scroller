@@ -80,9 +80,7 @@ ode/scroller | nvim $/C
 | fish ~ 
 ```
 One thing to note is that if the input stream is closed, Scroller will also exit. This behaviour can be overriden with the `-p` flag.
-```
-$ echo -e 'are you\nthe brain specialist?' | scroller -o -n
-```
+
 When `-c` or `--count` is used with `-o`, then count specifies the maximum number of times __each string__ can be scrolled. If any of the strings is scrolled for longer than that, then Scroller exits.
 
 
