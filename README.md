@@ -1,4 +1,6 @@
 # Description
+![Demo](scroller.gif)
+
 Scroller is a simple yet incredibly robust and powerful scrolling animator written in Python.
 
 Its primary use case lies with window managers, GUIs and TUIs where screen real estate is limited and it is useful to truncate or animate the text to fully utilise available space. It is meant to be used as part of a chain of Unix pipes.
