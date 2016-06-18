@@ -22,6 +22,13 @@ parser.add_argument(
                    )
 
 parser.add_argument(
+                    '-P', '--prefix',
+                    dest='prefix',
+                    default="",
+                    help='static characters that would not move'
+                   )
+
+parser.add_argument(
                     '-n', '--newline',
                     action='store_true',
                     default=False,
@@ -141,6 +148,8 @@ def main(string=None, args=None):
     if args.interval < 0:
         interval = 0.2
 
+    prefix = args.prefix
+
     count = float('inf')
     if args.count and args.count >= 0:
         count = args.count
@@ -154,7 +163,7 @@ def main(string=None, args=None):
                                         args.sep):
                 if args.len:
                     permutation = permutation[:args.len + 1]
-                print(permutation, end=end)
+                print(prefix + permutation, end=end)
                 sys.stdout.flush()
                 time.sleep(interval)
         else:
@@ -169,7 +178,7 @@ def main(string=None, args=None):
                         raise InputReceived
                     if args.len:
                         permutation = permutation[:args.len - 1]
-                    print(permutation, end=end)
+                    print(prefix + permutation, end=end)
                     sys.stdout.flush()
                     time.sleep(interval)
             except InputReceived:
