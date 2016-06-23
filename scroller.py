@@ -22,11 +22,11 @@ parser.add_argument(
                    )
 
 parser.add_argument(
-                    '-n', '--newline',
+                    '-m', '--mutate',
                     action='store_true',
                     default=False,
-                    dest='newline',
-                    help='print each permutation on a separate line'
+                    dest='mutate',
+                    help='scroll the text in place'
                    )
 
 parser.add_argument(
@@ -50,6 +50,7 @@ parser.add_argument(
                     '-c', '--count',
                     dest='count',
                     type=int,
+                    default=float('inf'),
                     help='specify number of characters to scroll'
                    )
 
@@ -84,6 +85,20 @@ parser.add_argument(
                     default=False,
                     action='store_true',
                     help='print version and exit'
+                   )
+
+parser.add_argument(
+                    '-a', '--after',
+                    dest='postfix',
+                    default='',
+                    help='append a static postfix to the text'
+                   )
+
+parser.add_argument(
+                    '-b', '--before',
+                    dest='prefix',
+                    default='',
+                    help='prepend a static prefix to the text'
                    )
 
 
@@ -133,28 +148,24 @@ def main(string=None, args=None):
     if args.len >= len(string):
         static = True
 
-    end = '\r'
-    if args.newline:
-        end = '\n'
+    end = '\n'
+    if args.mutate:
+        end = '\r'
 
     interval = args.interval
     if args.interval < 0:
         interval = 0.2
 
-    count = float('inf')
-    if args.count and args.count >= 0:
-        count = args.count
-
     try:
         if not args.open:
             for permutation in scroller(string,
                                         static,
-                                        count,
+                                        args.count,
                                         args.reverse,
                                         args.sep):
                 if args.len:
                     permutation = permutation[:args.len + 1]
-                print(permutation, end=end)
+                print(args.prefix + permutation + args.postfix, end=end)
                 sys.stdout.flush()
                 time.sleep(interval)
         else:
@@ -169,7 +180,7 @@ def main(string=None, args=None):
                         raise InputReceived
                     if args.len:
                         permutation = permutation[:args.len - 1]
-                    print(permutation, end=end)
+                    print(args.prefix + permutation + args.postfix, end=end)
                     sys.stdout.flush()
                     time.sleep(interval)
             except InputReceived:
@@ -181,7 +192,7 @@ def main(string=None, args=None):
                         main(string, args)
                     else:
                         return
-                if not args.newline:
+                if args.mutate:
                     sys.stdout.write('\033[K')
                 main(string, args)
 
