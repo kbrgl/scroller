@@ -15,7 +15,7 @@ Scroller has been built with sane defaults and it is incredibly easy to get star
 ```sh
 # xtitle is a command line utility that gets the title of the currently focused window from your desktop environment or window manager. The -s flag causes it to stream the window titles - whenever the active window changes, it outputs the new title
 # lemonbar is a simple program for rendering a status bar / panel on your display - it is commonly used with window managers like i3 and bspwm
-xtitle -s | scroller -o -n | lemonbar
+xtitle -s | scroller -o | lemonbar
 ```
 
 Using it is literally that simple. The window manager use case is just an example - Scroller can be used anywhere.
