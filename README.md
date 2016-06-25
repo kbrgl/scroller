@@ -1,3 +1,8 @@
+# Scroller in Rust
+Check out [Roller](https://github.com/kbrgl/roller), a re-implementation of Scroller in Rust.
+
+Roller's usage is (almost) the same as Scroller's. However, it consumes less memory.
+
 # Description
 ![Demo](scroller.gif)
 
