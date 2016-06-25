@@ -61,7 +61,7 @@ optional arguments:
 # Examples
 In several of the following examples, I use the -n flag which causes the text to be output on several lines. I've done this to make what is happening a little clearer.
 
-
+## Count
 The `-c 5` option specifies that 5 permutations should be made. In its absence, an infinite number of permutations would be made so the text would be scrolling indefinitely.
 ```sh
 $ echo 'Gumby' | scroller -c 5
@@ -72,7 +72,7 @@ y Gumb
  Gumby
 ```
 
-
+## Listen for fresh input on stdin
 The `-o` option means "Listen for incoming input. Whenever new input is received, update the current string with the new input." This option is useful if you are using Scroller to scroll text that is likely to change, such as the title of the active window, information about the currently playing song, etc.
 ```
 $ xtitle -s | scroller -o
@@ -89,7 +89,7 @@ One thing to note is that if the input stream is closed, Scroller will also exit
 
 When `-c` or `--count` is used with `-o`, then count specifies the maximum number of times __each string__ can be scrolled. If any of the strings is scrolled for longer than that, then Scroller exits.
 
-
+## Truncation
 The `-l 5` option means "if the text is less than 5 characters long then do not scroll it". This option is immensely useful if you want to make sure the text does not exceed a certain length -- sure, you could truncate it, but truncation may leave out important details.
 ```sh
 $ echo 'John' | scroller -c 3 -l 5
@@ -98,7 +98,7 @@ John
 John
 ```
 
-
+## Separator
 The `-s ' -- '` option means "after the entire string has been displayed, separate the end of the string and the start of string with ' -- '.
 ```sh
 $ echo 'John' | scroller -c 3 -s ' -- '
@@ -111,6 +111,17 @@ By default, the separator is a single space. If the default separator was an emp
 ohnJ
 hnJo
 nJoh
+```
+
+## Static prefix / postfix
+You can use static prefixes and postfixes using the `-b` and `-a` flags (standing for 'before' and 'after')
+```sh
+$ echo 'text' | scroller -c 5 -b '... ' -a ' ...' -s ''
+... extt ...
+... xtte ...
+... ttex ...
+... text ...
+... extt ...
 ```
 
 # License
