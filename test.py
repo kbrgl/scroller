@@ -137,7 +137,7 @@ class ScrollerCLITest(TestCase):
             '-s', ''
         ])
         scroller.main(self.test_str, args)
-        expected_call = call(self.test_str, end='\r')
+        expected_call = call(self.test_str, end='\n')
         mock_print.assert_has_calls([expected_call for i in range(c)])
 
     @patch('time.sleep', autospec=True)
@@ -169,7 +169,7 @@ class ScrollerCLITest(TestCase):
     @patch('time.sleep', autospec=True)
     @patch('builtins.print', autospec=True)
     def test_newline(self, mock_print, mock_sleep):
-        args = scroller.parser.parse_args(['-c', '1', '-n'])
+        args = scroller.parser.parse_args(['-c', '1'])
         scroller.main(' ', args)
         _, calling_kwargs = mock_print.call_args
         self.assertEqual(calling_kwargs['end'], '\n')
@@ -189,11 +189,35 @@ class ScrollerCLITest(TestCase):
                 yield ([], [], [])
 
         mock_select.side_effect = gen_side_effect()
-        args = scroller.parser.parse_args(['-c', '2', '-n', '-o'])
+        args = scroller.parser.parse_args(['-c', '2', '-o', '-m'])
         scroller.main(args=args)
         self.assertEqual(mock_input.call_count, 2)
         self.assertTrue(mock_write.called)
         self.assertTrue(mock_sleep.called)
+
+    @patch('time.sleep', autospec=True)
+    @patch('builtins.print', autospec=True)
+    def test_prefix(self, mock_print, mock_sleep):
+        args = scroller.parser.parse_args([
+            '-c', '1',
+            '-b', 'prefix',
+            '-s', ''
+        ])
+        scroller.main(' ', args)
+        calling_args, _ = mock_print.call_args
+        self.assertEqual(calling_args[0], 'prefix ')
+
+    @patch('time.sleep', autospec=True)
+    @patch('builtins.print', autospec=True)
+    def test_postfix(self, mock_print, mock_sleep):
+        args = scroller.parser.parse_args([
+            '-c', '1',
+            '-a', 'postfix',
+            '-s', ''
+        ])
+        scroller.main(' ', args)
+        calling_args, _ = mock_print.call_args
+        self.assertEqual(calling_args[0], ' postfix')
 
 if __name__ == '__main__':
     main()
