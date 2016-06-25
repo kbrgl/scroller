@@ -172,7 +172,7 @@ def main(string=None, args=None):
             try:
                 for permutation in scroller(string,
                                             static,
-                                            count,
+                                            args.count,
                                             args.reverse,
                                             args.sep):
                     r, _, _ = select.select([sys.stdin], [], [], 0)
