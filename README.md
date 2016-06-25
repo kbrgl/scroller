@@ -30,8 +30,8 @@ If you do not have pip installed, you can Google "install python 3 pip <your lin
 
 # Usage
 ```sh
-usage: scroller [-h] [-i INTERVAL] [-n] [-s SEP] [-l LEN] [-c COUNT] [-r] [-o]
-                [-p] [-v]
+usage: scroller [-h] [-i INTERVAL] [-m] [-s SEP] [-l LEN] [-c COUNT] [-r] [-o]
+                [-p] [-v] [-a POSTFIX] [-b PREFIX]
 
 A robust yet simple utility for animating scrolling text in the terminal.
 
@@ -39,7 +39,7 @@ optional arguments:
   -h, --help            show this help message and exit
   -i INTERVAL, --interval INTERVAL
                         specify scroll speed in seconds
-  -n, --newline         print each permutation on a separate line
+  -m, --mutate          scroll the text in place
   -s SEP, --separator SEP
                         append a separator to input string before animating,
                         used as padding
@@ -52,6 +52,10 @@ optional arguments:
   -p, --persist         if using --open flag, do not exit after stdin is
                         closed
   -v, --version         print version and exit
+  -a POSTFIX, --after POSTFIX
+                        append a static postfix to the text
+  -b PREFIX, --before PREFIX
+                        prepend a static prefix to the text
 ```
 
 # Examples
@@ -60,7 +64,7 @@ In several of the following examples, I use the -n flag which causes the text to
 
 The `-c 5` option specifies that 5 permutations should be made. In its absence, an infinite number of permutations would be made so the text would be scrolling indefinitely.
 ```sh
-$ echo 'Gumby' | scroller -n -c 5
+$ echo 'Gumby' | scroller -c 5
 umby G
 mby Gu
 by Gum
@@ -71,7 +75,7 @@ y Gumb
 
 The `-o` option means "Listen for incoming input. Whenever new input is received, update the current string with the new input." This option is useful if you are using Scroller to scroll text that is likely to change, such as the title of the active window, information about the currently playing song, etc.
 ```
-$ xtitle -s | scroller -o -n
+$ xtitle -s | scroller -o
 ~/Code/scroller | nvim 
 /Code/scroller | nvim $
 Code/scroller | nvim $/
@@ -88,7 +92,7 @@ When `-c` or `--count` is used with `-o`, then count specifies the maximum numbe
 
 The `-l 5` option means "if the text is less than 5 characters long then do not scroll it". This option is immensely useful if you want to make sure the text does not exceed a certain length -- sure, you could truncate it, but truncation may leave out important details.
 ```sh
-$ echo 'John' | scroller -n -c 3 -l 5
+$ echo 'John' | scroller -c 3 -l 5
 John
 John
 John
@@ -97,7 +101,7 @@ John
 
 The `-s ' -- '` option means "after the entire string has been displayed, separate the end of the string and the start of string with ' -- '.
 ```sh
-$ echo 'John' | scroller -n -c 3 -s ' -- '
+$ echo 'John' | scroller -c 3 -s ' -- '
 ohn -- J
 hn -- Jo
 n -- Joh
